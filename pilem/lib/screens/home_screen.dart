@@ -62,7 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 160,
                           fit: BoxFit.cover,
                         ),
-                        Text(movie.title),
+                        SizedBox(height: 5),
+                        Text(
+                          movie.title.length > 14
+                              ? '${movie.title.substring(0, 10)}...'
+                              : movie.title,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   );
@@ -74,4 +80,50 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+@override
+Widget _buildMoviesList(String title, List<Movie> movies) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          "All Movies",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _allMovies.length,
+          itemBuilder: (BuildContext context, int index) {
+            final Movie movie = _allMovies[index];
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Image.network(
+                    'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                    width: 120,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    movie.title.length > 14
+                        ? '${movie.title.substring(0, 10)}...'
+                        : movie.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }
