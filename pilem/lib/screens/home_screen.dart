@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Image.network(
                         'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                         width: 120,
-                        height: 160,
+                        height: 150,
                         fit: BoxFit.cover,
                       ),
                       SizedBox(height: 5),
