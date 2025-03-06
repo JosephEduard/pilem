@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pilem/screens/detail_screen.dart';
 import 'package:pilem/services/api_service.dart';
 import 'package:pilem/models/movie.dart';
 
@@ -46,62 +47,89 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Search Movie")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: "Search Movies",
-                        border: InputBorder.none,
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Colors.black87,
+        appBarTheme: AppBarTheme(backgroundColor: Colors.black45, elevation: 0),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.white70),
+          bodyMedium: TextStyle(color: Colors.white70),
+        ),
+      ),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Search"), centerTitle: true),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 30, 30, 30),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          hintText: "Search Movies",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  Visibility(
-                    visible: _searchController.text.isNotEmpty,
-                    child: IconButton(
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {
-                          _searchResult.clear();
-                        });
-                      },
-                      icon: const Icon(Icons.clear),
+                    Visibility(
+                      visible: _searchController.text.isNotEmpty,
+                      child: IconButton(
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchResult.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.clear),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _searchResult.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final Movie movie = _searchResult[index];
-                  return ListTile(
-                    title: Image.network(
-                      'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                      width: 20,
-                    ),
-                    subtitle: Text(movie.title),
-                    onTap: () {},
-                  );
-                },
+              SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _searchResult.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Movie movie = _searchResult[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ListTile(
+                        leading: Image.network(
+                          movie.posterPath != ''
+                              ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                              : 'https://placehold.co/50x75?text=No+Image',
+                          width: 50,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(movie.title),
+                        ),
+                        onTap: () {
+                          Navigator.push<dynamic>(
+                            context,
+                            MaterialPageRoute<dynamic>(
+                              builder: (context) => DetailScreen(movie: movie),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

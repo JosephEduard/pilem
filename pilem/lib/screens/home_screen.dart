@@ -61,17 +61,21 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Pilem', style: TextStyle(color: Colors.white)),
+          centerTitle: true,
         ),
         body: FadeTransition(
           opacity: _animationController,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildMoviesList("All Movies", _allMovies),
-                _buildMoviesList("Trending Movies", _trendingMovies),
-                _buildMoviesList("Popular Movies", _popularMovies),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMoviesList("All Movies", _allMovies),
+                  _buildMoviesList("Trending Movies", _trendingMovies),
+                  _buildMoviesList("Popular Movies", _popularMovies),
+                ],
+              ),
             ),
           ),
         ),
