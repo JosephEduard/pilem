@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pilem/models/movie.dart';
 import 'package:pilem/screens/detail_screen.dart';
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     _loadMovies();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     )..forward();
   }
@@ -110,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen>
                 openElevation: 0,
                 closedColor: Colors.transparent,
                 openColor: Colors.transparent,
+                transitionDuration: Duration(milliseconds: 400),
+                middleColor: Colors.black87,
                 closedBuilder:
                     (context, action) => GestureDetector(
                       onTap: action,
@@ -117,39 +120,38 @@ class _HomeScreenState extends State<HomeScreen>
                         padding: EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Hero(
-                              tag: 'movie_${movie.id}',
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 6,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                                    width: 125,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                    loadingBuilder: (
-                                      context,
-                                      child,
-                                      loadingProgress,
-                                    ) {
-                                      if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white70,
-                                        ),
-                                      );
-                                    },
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 2),
                                   ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                                  width: 125,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.amber[800],
+                                      ),
+                                    );
+                                  },
+                                  errorWidget:
+                                      (context, url, error) =>
+                                          Icon(Icons.error),
+                                  memCacheWidth: 250,
+                                  fadeOutDuration: Duration(milliseconds: 50),
+                                  fadeInDuration: Duration(milliseconds: 100),
                                 ),
                               ),
                             ),

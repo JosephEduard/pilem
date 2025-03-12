@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pilem/screens/detail_screen.dart';
 import 'package:pilem/services/api_service.dart';
@@ -103,13 +104,24 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: ListTile(
-                        leading: Image.network(
-                          movie.posterPath != ''
-                              ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
-                              : 'https://placehold.co/50x75?text=No+Image',
-                          width: 50,
-                          height: 120,
-                          fit: BoxFit.cover,
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                            width: 75,
+                            height: 120,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.amber[800],
+                                ),
+                              );
+                            },
+                            errorWidget:
+                                (context, url, error) => Icon(Icons.error),
+                          ),
                         ),
                         title: Align(
                           alignment: Alignment.centerLeft,
